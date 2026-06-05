@@ -1,4 +1,4 @@
-﻿# Purpleye — Real-time Retail Intelligence System
+# Purpleye — Real-time Retail Intelligence System
 
 End-to-end pipeline that turns raw in-store CCTV footage and POS receipts into business-relevant retail metrics: footfall, zone engagement, funnel conversion, anomalies, and a production-shaped API + live dashboard.
 
@@ -76,6 +76,16 @@ docker compose --profile video up --build
 ```bash
 docker compose --profile full up --build
 ```
+
+### Cloud Deployment (Render)
+
+This repository includes a Render Blueprint spec (`render.yaml`) for one-click cloud deployment.
+
+To deploy:
+1. Log in to [Render](https://render.com), click **New +** in your dashboard, and select **Blueprint**.
+2. Connect this GitHub repository (`saymasiddiquie/Purpleye`).
+3. Render will configure and deploy a PostgreSQL database, a Redis instance, and the unified application service automatically on the **Free Plan**.
+4. Once the build finishes, open the provided web service URL to view your live Streamlit dashboard!
 
 ## Local development
 
