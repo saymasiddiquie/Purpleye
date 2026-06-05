@@ -177,12 +177,15 @@ def main():
         while True:
             for process in processes:
                 if process.poll() is not None:
-                    print(
-                        f"Process exited unexpectedly "
-                        f"(PID={process.pid}, RC={process.returncode})"
-                    )
-                    terminate_processes(processes)
-                    sys.exit(process.returncode)
+                    # Allow helper processes (POS and Ingest) to exit cleanly (RC=0)
+                    is_helper = process in (pos_process, ingest_process)
+                    if not is_helper or process.returncode != 0:
+                        print(
+                            f"Process exited unexpectedly "
+                            f"(PID={process.pid}, RC={process.returncode})"
+                        )
+                        terminate_processes(processes)
+                        sys.exit(process.returncode)
 
             time.sleep(2)
 
