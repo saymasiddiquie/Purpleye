@@ -1,0 +1,1 @@
+web: python -m uvicorn services.api.main:app --host 0.0.0.0 --port $PORT
