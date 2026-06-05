@@ -11,10 +11,7 @@ services:
           name: purpleye-db
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
-          name: purpleye-redis
-          property: connectionString
+        value: redis://purpleye-redis:6379
 
   # Redis Instance
   - type: redis

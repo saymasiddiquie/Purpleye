@@ -410,3 +410,33 @@ async def wait_for_db(url: str, timeout_s: int = 60) -> None:
             if asyncio.get_event_loop().time() > deadline:
                 raise
             await asyncio.sleep(1)
+
+
+async def init_db(pool: AsyncConnectionPool) -> None:
+    """Read infra/postgres/init.sql and create the schema if it does not exist."""
+    check_sql = """
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+              AND table_name = 'sessions'
+        );
+    """
+    async with pool.connection() as conn, conn.cursor() as cur:
+        await cur.execute(check_sql)
+        row = await cur.fetchone()
+        exists = row[0] if row else False
+        
+        if not exists:
+            log.info("Database schema not found. Initializing...")
+            import os
+            base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+            init_sql_path = os.path.join(base_dir, "infra", "postgres", "init.sql")
+            
+            if os.path.exists(init_sql_path):
+                with open(init_sql_path, "r", encoding="utf-8") as f:
+                    schema_sql = f.read()
+                # Execute the full schema creation SQL
+                await cur.execute(schema_sql)
+                log.info("Database schema initialized successfully.")
+            else:
+                log.error("Could not find init.sql at %s", init_sql_path)

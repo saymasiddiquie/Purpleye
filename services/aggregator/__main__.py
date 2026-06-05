@@ -77,6 +77,7 @@ async def _main() -> None:
     # Wait for Postgres to be reachable.
     await db.wait_for_db(DATABASE_URL, timeout_s=120)
     pool = await db.open_pool(DATABASE_URL)
+    await db.init_db(pool)
 
     # First boot: populate the dashboard with a realistic 24h shift so the
     # reviewer sees a story, not an empty page. No-op on subsequent restarts.
