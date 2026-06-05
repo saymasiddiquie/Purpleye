@@ -3,6 +3,7 @@ services:
   - type: web
     name: purpleye-stack
     env: python
+    plan: free
     buildCommand: pip install -e .
     startCommand: python scripts/start_production.py
     envVars:
@@ -16,6 +17,7 @@ services:
   # Redis Instance
   - type: redis
     name: purpleye-redis
+    plan: free
     ipAllowList: [] # internal access only
 
 databases:
